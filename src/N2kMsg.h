@@ -1,8 +1,8 @@
 /*
  * N2kMsg.h
- * 
+ *
  * Copyright (c) 2015-2023 Timo Lappalainen, Kave Oy, www.kave.fi
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
@@ -11,8 +11,8 @@
  * Software is furnished to do so, subject to the following conditions:
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -23,19 +23,19 @@
 
 /**************************************************************************//**
  *  \file   N2kMsg.h
- *  \brief  This File contains the class tN2kMsg and all necessary functions 
+ *  \brief  This File contains the class tN2kMsg and all necessary functions
             to handle a NMEA2000 Message
- * 
- * The class tN2kMsg holds all necessary data of an NMEA2000 message. An object 
- * of this class will be passed to the SetN2kPGNxxxx function and there it is 
- * "filled" with the corresponding data. To extract data out of a NMEA2000 
- * message, the ParseN2kPGNxxxx functions can be used.  
+ *
+ * The class tN2kMsg holds all necessary data of an NMEA2000 message. An object
+ * of this class will be passed to the SetN2kPGNxxxx function and there it is
+ * "filled" with the corresponding data. To extract data out of a NMEA2000
+ * message, the ParseN2kPGNxxxx functions can be used.
  * As all the data on the NMEA2000 messages is stored in a byte array, there
- * are plenty of helper functions to inject or extract certain datatypes 
+ * are plenty of helper functions to inject or extract certain datatypes
  * in and out of this byte array.
- * 
+ *
  * \sa Parse and Set Function in \ref N2kMessages.h
- * 
+ *
  */
 
 #ifndef _tN2kMsg_H_
@@ -44,7 +44,9 @@
 #include "N2kStream.h"
 #include "N2kDef.h"
 #include <stdint.h>
+#include <math.h>
 
+const double EPSILON = 1e-9;
 /** \brief  Constant "Not Available" for a double value*/
 const double   N2kDoubleNA=-1e9;
 /** \brief  Constant "Not Available" for a float value*/
@@ -72,25 +74,25 @@ const int64_t  N2kInt64NA=0x7fffffffffffffffLL;
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {double} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
  */
-inline bool N2kIsNA(double v) { return v==N2kDoubleNA; }
+inline bool N2kIsNA(double v) { return fabs(v - N2kDoubleNA) < EPSILON; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {float} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
  */
-inline bool N2kIsNA(float v) { return v==N2kFloatNA; }
+inline bool N2kIsNA(float v) { return fabs(v - N2kFloatNA) < EPSILON; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {uint8_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -99,7 +101,7 @@ inline bool N2kIsNA(uint8_t v) { return v==N2kUInt8NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {int8_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -108,7 +110,7 @@ inline bool N2kIsNA(int8_t v) { return v==N2kInt8NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {uint16_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -117,7 +119,7 @@ inline bool N2kIsNA(uint16_t v) { return v==N2kUInt16NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {int16_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -126,7 +128,7 @@ inline bool N2kIsNA(int16_t v) { return v==N2kInt16NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {uint32_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -135,7 +137,7 @@ inline bool N2kIsNA(uint32_t v) { return v==N2kUInt32NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {int32_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -144,7 +146,7 @@ inline bool N2kIsNA(int32_t v) { return v==N2kInt32NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {uint64_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -153,7 +155,7 @@ inline bool N2kIsNA(uint64_t v) { return v==N2kUInt64NA; }
 
 /**************************************************************************//**
  * \brief Verify that the specified value is equal to "Not available".
- * 
+ *
  * \param v  {int64_t} Value to be verified
  * \return true:      Value equal to "Not available"
  * \return false:     Value not equal to "Not available"
@@ -162,24 +164,24 @@ inline bool N2kIsNA(int64_t v) { return v==N2kInt64NA; }
 
 /**************************************************************************//**
  * \brief Writes a float value into a byte array buffer
- * 
+ *
  * To write a float value into a certain position of an byte array buffer
  * the function memcpy is used. If the value represents "not available", the
  * corresponding constant is copied into the buffer.
- * 
+ *
  * \param v {float} Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBufFloat(float v, int &index, unsigned char *buf);
 
 /**************************************************************************//**
- * \brief Writes a double value into a byte array buffer  
+ * \brief Writes a double value into a byte array buffer
  *
  * \param v {double} Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
- * 
+ * \param buf       Pointer to the byte array buffer
+ *
  */
 void SetBufDouble(double v, int &index, unsigned char *buf);
 
@@ -190,15 +192,15 @@ void SetBufDouble(double v, int &index, unsigned char *buf);
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf8ByteDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -208,15 +210,15 @@ void SetBuf8ByteDouble(double v, double precision, int &index, unsigned char *bu
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf4ByteDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -226,15 +228,15 @@ void SetBuf4ByteDouble(double v, double precision, int &index, unsigned char *bu
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf4ByteUDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -244,15 +246,15 @@ void SetBuf4ByteUDouble(double v, double precision, int &index, unsigned char *b
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf3ByteDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -262,15 +264,15 @@ void SetBuf3ByteDouble(double v, double precision, int &index, unsigned char *bu
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf2ByteDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -280,15 +282,15 @@ void SetBuf2ByteDouble(double v, double precision, int &index, unsigned char *bu
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf2ByteUDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -298,15 +300,15 @@ void SetBuf2ByteUDouble(double v, double precision, int &index, unsigned char *b
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf1ByteDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -316,15 +318,15 @@ void SetBuf1ByteDouble(double v, double precision, int &index, unsigned char *bu
  * To write a double value into a certain position of an byte array buffer
  * the function memcpy is used. Out of range will be handled. So if given
  * value can not be converted to fixed integer, "out of range" constant
- * will be set. 
- * 
+ * will be set.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer. The fixed point integer mechanism is used.
- * 
+ *
  * \param v {double} Value to be stored in the Buffer
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf1ByteUDouble(double v, double precision, int &index, unsigned char *buf);
 
@@ -332,43 +334,43 @@ void SetBuf1ByteUDouble(double v, double precision, int &index, unsigned char *b
  * \brief Writes an integer value into a byte array buffer using 2 bytes
  * To write a integer value into a certain position of an byte array buffer
  * the function memcpy is used.
- * 
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer
- * 
+ *
  * \param v         Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf2ByteInt(int16_t v, int &index, unsigned char *buf);
 
 /**************************************************************************//**
- * \brief Writes an unsigned integer value into a byte array buffer using 
+ * \brief Writes an unsigned integer value into a byte array buffer using
  * 2 bytes
- * 
+ *
  * To write a integer value into a certain position of an byte array buffer
- * the function memcpy is used. 
- * 
+ * the function memcpy is used.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer
- * 
+ *
  * \param v         Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf2ByteUInt(uint16_t v, int &index, unsigned char *buf);
 
 /**************************************************************************//**
  * \brief Writes an integer value into a byte array buffer using 3 bytes
  * To write a integer value into a certain position of an byte array buffer
- * the function memcpy is used. 
- * 
+ * the function memcpy is used.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer
- * 
+ *
  * \param v         Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf3ByteInt(int32_t v, int &index, unsigned char *buf);
 
@@ -376,14 +378,14 @@ void SetBuf3ByteInt(int32_t v, int &index, unsigned char *buf);
  * \brief Writes an unsigned integer value into a byte array buffer u
  * ing 4 bytes
  * To write a integer value into a certain position of an byte array buffer
- * the function memcpy is used. 
- * 
+ * the function memcpy is used.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer
- * 
+ *
  * \param v         Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBuf4ByteUInt(uint32_t v, int &index, unsigned char *buf);
 
@@ -391,24 +393,24 @@ void SetBuf4ByteUInt(uint32_t v, int &index, unsigned char *buf);
  * \brief Writes an unsigned integer 64bit value into a byte array buffer
  * using 8 bytes
  * To write a integer value into a certain position of an byte array buffer
- * the function memcpy is used. 
- * 
+ * the function memcpy is used.
+ *
  * There are different functions depending on how many byte should be used
  * in the buffer
- * 
+ *
  * \param v         Value to be stored in the Buffer
  * \param index     Position where the value should be placed inside the buffer
- * \param buf       Pointer to the byte array buffer 
+ * \param buf       Pointer to the byte array buffer
  */
 void SetBufUInt64(uint64_t v, int &index, unsigned char *buf);
 
 /**************************************************************************//**
  * \brief Writes a string into a byte array buffer
- * 
+ *
  * \param str   String as pointer to a char array
  * \param len   Length of the string
  * \param index Position where the value should be placed inside the buffer
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param UsePgm {bool} use the pgm_read_byte function
  * \param fillChar fill the rest of the buffer with this character
  */
@@ -417,11 +419,11 @@ void SetBufStr(const char *str, int len, int &index, unsigned char *buf, bool Us
 /**************************************************************************//**
  * \brief Extracts 2 bytes ouf of the given buffer
  * and converts it to an integer value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \return      integer value
  */
 int16_t GetBuf2ByteInt(int &index, const unsigned char *buf);
@@ -429,11 +431,11 @@ int16_t GetBuf2ByteInt(int &index, const unsigned char *buf);
 /**************************************************************************//**
  * \brief Extracts 2 bytes ouf of the given buffer
  * and converts it to an integer value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \return      integer value
  */
 uint16_t GetBuf2ByteUInt(int &index, const unsigned char *buf);
@@ -441,11 +443,11 @@ uint16_t GetBuf2ByteUInt(int &index, const unsigned char *buf);
 /**************************************************************************//**
  * \brief Extracts 3 bytes ouf of the given buffer
  * and converts it to an integer value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \return      integer value
  */
 uint32_t GetBuf3ByteUInt(int &index, const unsigned char *buf);
@@ -453,11 +455,11 @@ uint32_t GetBuf3ByteUInt(int &index, const unsigned char *buf);
 /**************************************************************************//**
  * \brief Extracts 4 ytes ouf of the given buffer
  * and converts it to an integer value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \return      integer value
  */
 uint32_t GetBuf4ByteUInt(int &index, const unsigned char *buf);
@@ -465,11 +467,11 @@ uint32_t GetBuf4ByteUInt(int &index, const unsigned char *buf);
 /**************************************************************************//**
  * \brief Extracts 8 bytes ouf of the given buffer
  * and converts it to an integer value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \return      integer value
  */
 uint64_t GetBuf8ByteUInt(int &index, const unsigned char *buf);
@@ -477,14 +479,14 @@ uint64_t GetBuf8ByteUInt(int &index, const unsigned char *buf);
 /**************************************************************************//**
  * \brief Extracts the specified numbers of bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -494,14 +496,14 @@ double GetBuf1ByteDouble(double precision, int &index, const unsigned char *buf,
 /**************************************************************************//**
  * \brief Extracts 1 byte ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -511,14 +513,14 @@ double GetBuf1ByteUDouble(double precision, int &index, const unsigned char *buf
 /**************************************************************************//**
  * \brief Extracts 2 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -528,14 +530,14 @@ double GetBuf2ByteDouble(double precision, int &index, const unsigned char *buf,
 /**************************************************************************//**
  * \brief Extracts 2 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -545,14 +547,14 @@ double GetBuf2ByteUDouble(double precision, int &index, const unsigned char *buf
 /**************************************************************************//**
  * \brief Extracts 3 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -562,14 +564,14 @@ double GetBuf3ByteDouble(double precision, int &index, const unsigned char *buf,
 /**************************************************************************//**
  * \brief Extracts 4 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -579,14 +581,14 @@ double GetBuf4ByteDouble(double precision, int &index, const unsigned char *buf,
 /**************************************************************************//**
  * \brief Extracts 4 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -596,14 +598,14 @@ double GetBuf4ByteUDouble(double precision, int &index, const unsigned char *buf
 /**************************************************************************//**
  * \brief Extracts 8 bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param precision the value is rounded to the given precision (e.g. 0.01)
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -613,13 +615,13 @@ double GetBuf8ByteDouble(double precision, int &index, const unsigned char *buf,
 /**************************************************************************//**
  * \brief Extracts bytes ouf of the given buffer
  * and converts it to a double value.
- * 
+ *
  * The fixed point integer mechanism is used.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      double value
@@ -629,11 +631,11 @@ double GetBufDouble(int &index, const unsigned char *buf, double def=0);
 /**************************************************************************//**
  * \brief Extracts the specified numbers of bytes ouf of the given buffer
  * and converts it to an float value.
- * 
+ *
  * \param index       position inside the byte array \ref tN2kMsg::Data, getting
  *                    incremented according to the number of bytes
  *                    extracted
- * \param buf   Pointer to the byte array buffer 
+ * \param buf   Pointer to the byte array buffer
  * \param def   default value that will be returned if the byte array
  *              equal to "not available"
  * \return      float value
@@ -644,19 +646,19 @@ float GetBufFloat(int &index, const unsigned char *buf, float def=0);
  * \class tN2kMsg
  * \brief This class contains all the data of an NMEA2000 message
  * \ingroup group_core
- * 
- * The class tN2kMsg holds all necessary data of an NMEA2000 message. An object 
- * of this class will be passed to the SetN2kPGNxxxx function and there it is 
- * "filled" with the corresponding data. To extract data out of a NMEA2000 
- * message, the ParseN2kPGNxxxx functions can be used. 
- * 
+ *
+ * The class tN2kMsg holds all necessary data of an NMEA2000 message. An object
+ * of this class will be passed to the SetN2kPGNxxxx function and there it is
+ * "filled" with the corresponding data. To extract data out of a NMEA2000
+ * message, the ParseN2kPGNxxxx functions can be used.
+ *
  * \sa N2kMessages.h
  */
 class tN2kMsg
 {
 public:
   /************************************************************************//**
-   * \brief Maximum number of bytes that can be stored in the data buffer 
+   * \brief Maximum number of bytes that can be stored in the data buffer
    * With fast packet the first frame can have 6 byte and rest 31 frames
    * 7 bytes.
    */
@@ -702,7 +704,7 @@ public:
 public:
   /************************************************************************//**
    * \brief Construct a new t N2k Msg object
-   * 
+   *
    * \param _Source   Source address of the NMEA2000 device sending this message
    *                  [range 0 .. 251] default = 15
    * \param _Priority Priority of the Message [0 .. 7] default = 6
@@ -712,13 +714,13 @@ public:
   tN2kMsg(unsigned char _Source=15, unsigned char _Priority=6, unsigned long _PGN=0, int _DataLen=0);
 
   /************************************************************************//**
-   * \brief Set the Parameter Group Number of the message   * 
+   * \brief Set the Parameter Group Number of the message   *
    * \param _PGN Parameter Group Number [decimal]
    */
   void SetPGN(unsigned long _PGN);
 
   /************************************************************************//**
-   * \brief Set the Source of the message 
+   * \brief Set the Source of the message
    * \param _Source   Source address of the NMEA2000 device sending this message
    *                  [range 0 .. 251] default = 15
    */
@@ -735,12 +737,12 @@ public:
 
   /************************************************************************//**
    * \brief Initialisation of the N2kMsg object
-   * 
+   *
    * \param _Priority Priority of the Message [0 .. 7]
    * \param _PGN      Parameter Group Number [decimal]
    * \param _Source   Source address of the NMEA2000 device sending this message
    *                  [range 0 .. 251]
-   * \param _Destination Destination address of the NMEA2000 device sending 
+   * \param _Destination Destination address of the NMEA2000 device sending
    *                     this message [range 0 .. 251]
    */
   void Init(unsigned char _Priority, unsigned long _PGN, unsigned char _Source, unsigned char _Destination=0xff);
@@ -760,20 +762,20 @@ public:
   bool IsValid() const { return (PGN!=0 && DataLen>0); }
 
   /************************************************************************//**
-   * \brief Get the Remaining Data Length 
-   * 
+   * \brief Get the Remaining Data Length
+   *
    * \param Index Position inside the buffer
-   * 
+   *
    * \return int - Remaining Data length
    */
   int GetRemainingDataLength(int Index) const { return DataLen>Index?DataLen-Index:0; }
 
   /************************************************************************//**
-   * \brief Get the Available Data Length 
-   * The method calculates the available data length with 
+   * \brief Get the Available Data Length
+   * The method calculates the available data length with
    * \ref MaxDataLen - \ref DataLen
-   * 
-   * \return int Available Data Length 
+   *
+   * \return int Available Data Length
    */
   int GetAvailableDataLength() const { return MaxDataLen-DataLen; }
 
@@ -789,11 +791,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 8 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -802,11 +804,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 4 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -815,11 +817,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 4 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -828,11 +830,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 3 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -841,11 +843,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 2 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -854,11 +856,11 @@ public:
 
   /************************************************************************//**
    * \brief Add double value to the buffer using 2 bytes
-   * 
+   *
    * The fixed point integer mechanism is used.
    * The value will be added to the end (indicated by \ref DataLen) of
    * the byte array \ref Data.
-   * 
+   *
    * \param precision the value is rounded to the given precision (e.g. 0.01)
    * \param v         value to add
    * \param UndefVal  "not available" value
@@ -867,11 +869,11 @@ public:
 
  /************************************************************************//**
   * \brief Add double value to the buffer using 1 byte
-  * 
+  *
   * The fixed point integer mechanism is used.
   * The value will be added to the end (indicated by \ref DataLen) of
   * the byte array \ref Data.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param v         value to add
   * \param UndefVal  "not available" value
@@ -880,11 +882,11 @@ public:
 
  /************************************************************************//**
   * \brief Add double value to the buffer using 1 byte
-  * 
+  *
   * The fixed point integer mechanism is used.
   * The value will be added to the end (indicated by \ref DataLen) of
   * the byte array \ref Data.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param v         value to add
   * \param UndefVal  "not available" value
@@ -954,7 +956,7 @@ public:
   * This method determines the length of the string by it self using strlen().
   * The string will be added to the end (indicated by \ref DataLen) of
   * the byte array \ref Data.
-  * 
+  *
   * \param str   String as pointer to a char array
   * \param UsePgm {bool} use the pgm_read_byte function
   */
@@ -962,28 +964,28 @@ public:
 
  /************************************************************************//**
   * \brief Add byte array to the buffer
-  * 
+  *
   * The buffer will be added to the end (indicated by \ref DataLen) of
   * the byte array \ref Data.
-  * 
-  * \param buf     Pointer to the byte array 
+  *
+  * \param buf     Pointer to the byte array
   * \param bufLen  Number of bytes to add
   */
   void AddBuf(const void *buf, size_t bufLen);
 
  /************************************************************************//**
   * \brief Get the value from a byte out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
   * \return  value represented in the byte array
   */
   unsigned char GetByte(int &Index) const;
-  
+
  /************************************************************************//**
   * \brief Get an integer from 2 bytes out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -994,7 +996,7 @@ public:
 
  /************************************************************************//**
   * \brief Get an unsigned integer from 2 bytes out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -1005,7 +1007,7 @@ public:
 
  /************************************************************************//**
   * \brief Get an unsigned integer from 3 bytes out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -1016,7 +1018,7 @@ public:
 
  /************************************************************************//**
   * \brief Get an unsigned integer from 4 bytes out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -1027,7 +1029,7 @@ public:
 
  /************************************************************************//**
   * \brief Get an unsigned integer from 8 bytes out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -1039,7 +1041,7 @@ public:
  /************************************************************************//**
   * \brief Get a double from 1 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1052,7 +1054,7 @@ public:
   /************************************************************************//**
   * \brief Get a double from 1 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1065,7 +1067,7 @@ public:
   /************************************************************************//**
   * \brief Get a double from 2 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1078,7 +1080,7 @@ public:
   /************************************************************************//**
   * \brief Get a double from 2 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1091,7 +1093,7 @@ public:
   /************************************************************************//**
   * \brief Get a double from 3 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1104,7 +1106,7 @@ public:
   /************************************************************************//**
   * \brief Get a double from 4 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1117,7 +1119,7 @@ public:
  /************************************************************************//**
   * \brief Get a double from 4 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1130,7 +1132,7 @@ public:
  /************************************************************************//**
   * \brief Get a double from 8 bytes out of \ref Data
   * The fixed point integer mechanism is used.
-  * 
+  *
   * \param precision the value is rounded to the given precision (e.g. 0.01)
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
@@ -1142,7 +1144,7 @@ public:
 
  /************************************************************************//**
   * \brief Get a float out of \ref Data
-  * 
+  *
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
@@ -1150,16 +1152,16 @@ public:
   * \return        integer value
   */
   float  GetFloat(int &Index, float def=N2kFloatNA) const;
-  
+
  /************************************************************************//**
   * \brief Get a string out of \ref Data
-  * 
+  *
   * \param StrBuf  Pointer to a char array as string
   * \param Length  Length of the string
   * \param Index       position inside the byte array \ref Data, getting
   *                    incremented according to the number of bytes
   *                    extracted
-  * 
+  *
   * \return true   String data has been extracted
   * \return false  not successful, no string data available
   */
@@ -1167,7 +1169,7 @@ public:
 
   /************************************************************************//**
    * \brief Get a string out of \ref Data
-   * 
+   *
    * \param StrBufSize  Size of String Buffer
    * \param StrBuf      Pointer to a char array as string
    * \param Length      Length of the string
@@ -1175,7 +1177,7 @@ public:
    * \param Index       position inside the byte array \ref Data, getting
    *                    incremented according to the number of bytes
    *                    extracted
-   * 
+   *
    * \return true   String data has been extracted
    * \return false  not successful, no string data available
    */
@@ -1183,7 +1185,7 @@ public:
 
   /************************************************************************//**
    * \brief Get a string out of \ref Data
-   * This method determines the length of the string by it self, using 
+   * This method determines the length of the string by it self, using
    * the byte (index -2) inside \ref Data
    *
    * \param StrBufSize  Size of String Buffer
@@ -1191,7 +1193,7 @@ public:
    * \param Index       position inside the byte array \ref Data, getting
    *                    incremented according to the number of bytes
    *                    extracted
-   * 
+   *
    * \return true   String data has been extracted
    * \return false  not successful, no string data available
    */
@@ -1199,7 +1201,7 @@ public:
 
   /************************************************************************//**
    * \brief Get a byte array out of \ref Data
-   * 
+   *
    * \param buf         Pointer to byte array
    * \param Length      Length of byte array to be extracted
    * \param Index       position inside the byte array \ref Data, getting
@@ -1212,7 +1214,7 @@ public:
 
   /************************************************************************//**
    * \brief Set a byte in \ref Data
-   * 
+   *
    * \param v           Value to add
    * \param Index       position inside the byte array \ref Data, getting
    *                    incremented according to the number of bytes
@@ -1224,7 +1226,7 @@ public:
 
   /************************************************************************//**
    * \brief Set a 2byte unsigned integer in \ref Data
-   * 
+   *
    * \param v           Value to add
    * \param Index       position inside the byte array \ref Data, getting
    *                    incremented according to the number of bytes
@@ -1236,7 +1238,7 @@ public:
 
   /************************************************************************//**
    * \brief Print out the whole content of the N2kMsg Object
-   * 
+   *
    * \param port      port where to stream, see \ref N2kStream
    * \param NoData    if true the data buffer will not be printed
    */
@@ -1245,7 +1247,7 @@ public:
   /************************************************************************//**
    * \brief Print out the whole content of the N2kMsg Object
    * using the Actisense Format
-   * 
+   *
    * \param port      port where to stream, see \ref N2kStream
    */
   void SendInActisenseFormat(N2kStream *port) const;
@@ -1253,9 +1255,9 @@ public:
 
 /************************************************************************//**
  * \brief Print out a buffer (byte array)
- * 
+ *
  * \param port    port where to stream, see \ref N2kStream
- * \param len     Number of bytes to be printed 
+ * \param len     Number of bytes to be printed
  * \param pData   Pointer to the buffer
  * \param AddLF   true will add a LineFeed at the end
  */

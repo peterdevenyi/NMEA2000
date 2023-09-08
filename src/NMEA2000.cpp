@@ -112,11 +112,11 @@ void N2kPrintFreeMemory(const char *Source) {
 #define MaxHeartbeatInterval 655320UL
 
 /** \brief Max frames, which can be received at time */
-#define TP_MAX_FRAMES 5 
+#define TP_MAX_FRAMES 5
 /** \brief Multi packet connection management, TP.CM */
-#define TP_CM 60416L 
+#define TP_CM 60416L
 /** \brief Multi packet data transfer */
-#define TP_DT 60160L 
+#define TP_DT 60160L
 /** \brief Multi packet connection management, Broadcast Announce Message */
 #define TP_CM_BAM    32
 /** \brief Multi packet connection management, Request To Send */
@@ -128,20 +128,20 @@ void N2kPrintFreeMemory(const char *Source) {
 /** \brief Multi packet connection management, Abort Connection */
 #define TP_CM_Abort 255
 
-/** \brief Already in one or more connection managed sessions and cannot 
+/** \brief Already in one or more connection managed sessions and cannot
  * support another */
-#define TP_CM_AbortBusy 1	
-/** \brief System resources were needed for another task so this connection 
+#define TP_CM_AbortBusy 1
+/** \brief System resources were needed for another task so this connection
  * managed session was terminated */
-#define TP_CM_AbortNoResources 2	
+#define TP_CM_AbortNoResources 2
 /** \brief A timeout occurred and this is the connection abort to close the s
  * ession */
-#define TP_CM_AbortTimeout 3 
+#define TP_CM_AbortTimeout 3
 
 /************************************************************************//**
  * \
  * \brief Default list of Transmit Messages
- * 
+ *
  * List of default transmit PGNs:
  * - 59392L ISO Acknowledgement, pri=6, period=NA
  * - 59904L ISO Request, pri=6, period=NA
@@ -153,7 +153,7 @@ void N2kPrintFreeMemory(const char *Source) {
  * - 126993L Heartbeat, pri=7, period=60000
  * - 126996L Product information, pri=6, period=NA
  * - 126998L Configuration information, pri=6, period=NA
- * 
+ *
  * This lis is terminated by 0.
  *
  */
@@ -178,7 +178,7 @@ const unsigned long DefTransmitMessages[] PROGMEM = {
 
 /************************************************************************//**
  * \brief Default list of Received Messages
- * 
+ *
  * List of default transmit PGNs:
  * - 59392L ISO Acknowledgement, pri=6, period=NA
  * - 59904L ISO Request, pri=6, period=NA
@@ -187,7 +187,7 @@ const unsigned long DefTransmitMessages[] PROGMEM = {
  * - 60928L ISO Address Claim
  * - 65240L Commanded Address
  * - 126208L NMEA Request/Command/Acknowledge group function
- * 
+ *
  * This lis is terminated by 0.
  *
  */
@@ -210,7 +210,7 @@ const unsigned long DefReceiveMessages[] PROGMEM = {
  *
  * \param PGN      PGN to be tested
  * \return true -> for PGNs: 59392L, 59904L, 60928L, 60416L, 60160L
- * \return false 
+ * \return false
  */
 bool IsSingleFrameSystemMessage(unsigned long PGN) {
                                   switch (PGN) {
@@ -229,7 +229,7 @@ bool IsSingleFrameSystemMessage(unsigned long PGN) {
  *
  * \param PGN     PGN to be tested
  * \return true   -> for PGNs: 65240L, 126208L
- * \return false 
+ * \return false
  */
 bool IsFastPacketSystemMessage(unsigned long PGN) {
                                   switch (PGN) {
@@ -244,7 +244,7 @@ bool IsFastPacketSystemMessage(unsigned long PGN) {
  * \brief Checks if the given PGN is a Default Single Frame Message
  *
  * \param PGN     PGN to be tested
- * \return true   -> for PGNs: 
+ * \return true   -> for PGNs:
  *              - 126992L: System date/time, pri=3, period=1000
  *              - 126993L: Heartbeat, pri=7, period=60000
  *              - 127245L: Rudder, pri=2, period=100
@@ -269,9 +269,9 @@ bool IsFastPacketSystemMessage(unsigned long PGN) {
  *              - 130314L: Pressure, pri=5, period=2000
  *              - 130316L: Temperature extended range, pri=5, period=NA
  *              - 130576L: Small Craft Status (Trim Tab position), pri=2, period=200
- * 
- * 
- * \return false 
+ *
+ *
+ * \return false
  */
 bool IsDefaultSingleFrameMessage(unsigned long PGN) {
                                   switch (PGN) {
@@ -312,8 +312,8 @@ bool IsDefaultSingleFrameMessage(unsigned long PGN) {
  *         - 126464L: PGN List (Transmit and Receive), pri=6, period=NA
  *         - 126996L: Product information, pri=6, period=NA
  *         - 126998L: Configuration information, pri=6, period=NA
- * 
- * \return false 
+ *
+ * \return false
  */
 bool IsMandatoryFastPacketMessage(unsigned long PGN) {
                                   switch (PGN) {
@@ -420,7 +420,7 @@ bool IsMandatoryFastPacketMessage(unsigned long PGN) {
  *          - 130567L: Watermaker Input Setting and Status, pri=6, period=2500
  *          - 130577L: Direction Data PGN, pri=3, period=1000
  *          - 130578L: Vessel Speed Components, pri=2, period=250
- * \return false 
+ * \return false
  */
 bool IsDefaultFastPacketMessage(unsigned long PGN) {
                                   switch (PGN) {
@@ -527,7 +527,7 @@ bool IsDefaultFastPacketMessage(unsigned long PGN) {
  *    - 126720L
  *    - 130816L
  *    - 131071L
- * \return false 
+ * \return false
  */
 bool IsProprietaryFastPacketMessage(unsigned long PGN) {
   return ( PGN==126720L ) || ( 130816L<=PGN && PGN<=131071L );
@@ -538,10 +538,10 @@ bool tNMEA2000::IsProprietaryMessage(unsigned long PGN) {
 }
 
 /************************************************************************//**
- * \brief Default Product Information 
- * 
+ * \brief Default Product Information
+ *
  * This structure holds the default Produkt Information of the device:
- * 
+ *
  * - N2kVersion = 2101
  * - ProductCode = 666
  * - N2kModelID = Arduino N2k->PC
@@ -550,7 +550,7 @@ bool tNMEA2000::IsProprietaryMessage(unsigned long PGN) {
  * - N2kModelSerialCode = 00000001
  * - CertificationLevel = 0
  * - LoadEquivalency = 1
- * 
+ *
  */
 const tNMEA2000::tProductInformation DefProductInformation PROGMEM = {
                                        2101,               // N2kVersion
@@ -1250,7 +1250,7 @@ void CanIdToN2k(unsigned long id, unsigned char &prio, unsigned long &pgn, unsig
  * \param PGN       PGN of the N2k message
  * \param Source    Source of the N2k message
  * \param Destination   Destination of the N2k message
- * 
+ *
  * \return unsigned long -> CAN Id
  */
 unsigned long N2ktoCanID(unsigned char priority, unsigned long PGN, unsigned long Source, unsigned char Destination) {
@@ -1320,7 +1320,7 @@ void tNMEA2000::SetHeartbeatIntervalAndOffset(uint32_t interval, uint32_t offset
       if ( interval>MaxHeartbeatInterval ) interval=MaxHeartbeatInterval;
       if ( interval<1000 ) interval=1000;
 
-      bool changed=( Devices[i].HeartbeatScheduler.GetPeriod()!=interval || Devices[i].HeartbeatScheduler.GetOffset()!=offset ); 
+      bool changed=( Devices[i].HeartbeatScheduler.GetPeriod()!=interval || Devices[i].HeartbeatScheduler.GetOffset()!=offset );
       if ( changed ) {
         Devices[i].HeartbeatScheduler.SetPeriodAndOffset(interval,offset);
         DeviceInformationChanged=true;
@@ -1561,7 +1561,7 @@ bool tNMEA2000::CheckKnownMessage(unsigned long PGN, bool &SystemMessage, bool &
     }
 
     FastPacket=IsProprietaryFastPacketMessage(PGN);
-    
+
     return false;
 }
 
@@ -2141,7 +2141,7 @@ void tNMEA2000::SendRxPGNList(unsigned char Destination, int DeviceIndex) {
 
 //*****************************************************************************
 void SetN2kPGN126996Progmem(tN2kMsg &N2kMsg, const tNMEA2000::tProductInformation *ProductInformation, char *OptionalSerialCode=0) {
-  int i;
+    int i;
 
     N2kMsg.SetPGN(126996L);
     N2kMsg.Priority=6;
