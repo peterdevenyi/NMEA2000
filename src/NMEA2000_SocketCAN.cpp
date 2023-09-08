@@ -30,7 +30,7 @@
 *   Inherited NMEA2000 object for socketCAN setup. See also NMEA2000 library.
 ****************************************************************************/
 
-#include "n2k_socketcan.hpp"
+#include "NMEA2000_SocketCAN.h"
 
 #include <px4_platform_common/log.h>
 
@@ -81,7 +81,7 @@ bool tNMEA2000_SocketCAN::CANOpen() {
         }
 
     strncpy(ifr.ifr_name, _CANport, (sizeof(ifr.ifr_name)-1));
-    ifr.ifr_name[sizeof(ifr.ifr_name)] = '\0';                                          //  (And make sure to null terminate)
+    ifr.ifr_name[sizeof(ifr.ifr_name) - 1] = '\0';                                          //  (And make sure to null terminate)
 
     if (ioctl(skt, SIOCGIFINDEX, &ifr) < 0) {
         PX4_ERR("Failed CAN ioctl: %s", ifr.ifr_name);
@@ -159,9 +159,9 @@ tSocketStream::tSocketStream(const char *_port) : port(-1) {
   }
 
   if ( port!=-1 ) {
-    PX4_INFO("%d opened", _port);
+    PX4_INFO("%s opened", _port);
   } else {
-    if ( _port!=0 ) PX4_ERR("Failed to open port %d. Using stdout", _port);
+    if ( _port!=0 ) PX4_ERR("Failed to open port %s. Using stdout", _port);
   }
 }
 

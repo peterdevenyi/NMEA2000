@@ -2570,12 +2570,12 @@ void tNMEA2000::ParseMessages() {
 void tNMEA2000::RunMessageHandlers(const tN2kMsg &N2kMsg) {
   if ( MsgHandler!=0 ) MsgHandler(N2kMsg);
 
-  tMsgHandler *MsgHandler=MsgHandlers;
+  tMsgHandler *MsgHandlerPtr=MsgHandlers;
   // Loop through all pgn handlers
-  for ( ;MsgHandler!=0 && MsgHandler->GetPGN()==0; MsgHandler=MsgHandler->pNext) MsgHandler->HandleMsg(N2kMsg);
+  for ( ;MsgHandlerPtr!=0 && MsgHandlerPtr->GetPGN()==0; MsgHandlerPtr=MsgHandlerPtr->pNext) MsgHandlerPtr->HandleMsg(N2kMsg);
   // Loop through specific pgn handlers
-  for ( ;MsgHandler!=0 && MsgHandler->GetPGN()<=N2kMsg.PGN; MsgHandler=MsgHandler->pNext) {
-    if ( MsgHandler->GetPGN()==N2kMsg.PGN ) MsgHandler->HandleMsg(N2kMsg);
+  for ( ;MsgHandlerPtr!=0 && MsgHandlerPtr->GetPGN()<=N2kMsg.PGN; MsgHandlerPtr=MsgHandlerPtr->pNext) {
+    if ( MsgHandlerPtr->GetPGN()==N2kMsg.PGN ) MsgHandlerPtr->HandleMsg(N2kMsg);
   }
 }
 
@@ -2600,14 +2600,14 @@ void tNMEA2000::AttachMsgHandler(tMsgHandler *_MsgHandler) {
   if ( MsgHandlers==0 ) {
     MsgHandlers=_MsgHandler;
   } else {
-    tMsgHandler *MsgHandler=MsgHandlers;
-    if ( MsgHandler->GetPGN()>_MsgHandler->GetPGN() ) { // Add to first
-      _MsgHandler->pNext=MsgHandler;
+    tMsgHandler *MsgHandlerPtr=MsgHandlers;
+    if ( MsgHandlerPtr->GetPGN()>_MsgHandler->GetPGN() ) { // Add to first
+      _MsgHandler->pNext=MsgHandlerPtr;
       MsgHandlers=_MsgHandler;
     } else {
-      for ( ; MsgHandler->pNext!=0 && MsgHandler->pNext->GetPGN()<_MsgHandler->GetPGN(); MsgHandler=MsgHandler->pNext );
-      _MsgHandler->pNext=MsgHandler->pNext;
-      MsgHandler->pNext=_MsgHandler;
+      for ( ; MsgHandlerPtr->pNext!=0 && MsgHandlerPtr->pNext->GetPGN()<_MsgHandler->GetPGN(); MsgHandlerPtr=MsgHandlerPtr->pNext );
+      _MsgHandler->pNext=MsgHandlerPtr->pNext;
+      MsgHandlerPtr->pNext=_MsgHandler;
     }
   }
 
@@ -2618,13 +2618,13 @@ void tNMEA2000::AttachMsgHandler(tMsgHandler *_MsgHandler) {
 void tNMEA2000::DetachMsgHandler(tMsgHandler *_MsgHandler) {
   if ( _MsgHandler==0 || _MsgHandler->pNMEA2000==0 ) return;
 
-  tMsgHandler *MsgHandler=_MsgHandler->pNMEA2000->MsgHandlers;
+  tMsgHandler *MsgHandlerPtr=_MsgHandler->pNMEA2000->MsgHandlers;
 
-  if ( MsgHandler==_MsgHandler ) { // Is this at first
-    _MsgHandler->pNMEA2000->MsgHandlers=MsgHandler->pNext;
+  if ( MsgHandlerPtr==_MsgHandler ) { // Is this at first
+    _MsgHandler->pNMEA2000->MsgHandlers=MsgHandlerPtr->pNext;
   } else {
-    for ( ; MsgHandler!=0 && MsgHandler->pNext!=_MsgHandler; MsgHandler=MsgHandler->pNext );
-    if ( MsgHandler!=0 ) MsgHandler->pNext=_MsgHandler->pNext;
+    for ( ; MsgHandlerPtr!=0 && MsgHandlerPtr->pNext!=_MsgHandler; MsgHandlerPtr=MsgHandlerPtr->pNext );
+    if ( MsgHandlerPtr!=0 ) MsgHandlerPtr->pNext=_MsgHandler->pNext;
   }
   _MsgHandler->pNext=0;
   _MsgHandler->pNMEA2000=0;

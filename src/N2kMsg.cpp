@@ -98,7 +98,7 @@ void tN2kMsg::Clear() {
 
 //*****************************************************************************
 void tN2kMsg::AddFloat(float v, float UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBufFloat(v,DataLen,Data);
   } else {
     SetBuf4ByteUInt(N2kInt32NA,DataLen,Data);
@@ -107,7 +107,7 @@ void tN2kMsg::AddFloat(float v, float UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add8ByteDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf8ByteDouble(v,precision,DataLen,Data);
   } else {
     SetBuf4ByteUInt(N2kUInt32NA,DataLen,Data);
@@ -117,7 +117,7 @@ void tN2kMsg::Add8ByteDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add4ByteDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf4ByteDouble(v,precision,DataLen,Data);
   } else {
     SetBuf4ByteUInt(N2kInt32NA,DataLen,Data);
@@ -126,7 +126,7 @@ void tN2kMsg::Add4ByteDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add4ByteUDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf4ByteUDouble(v,precision,DataLen,Data);
   } else {
     SetBuf4ByteUInt(N2kUInt32NA,DataLen,Data);
@@ -135,7 +135,7 @@ void tN2kMsg::Add4ByteUDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add3ByteDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf3ByteDouble(v,precision,DataLen,Data);
   } else {
     SetBuf3ByteInt(0x7fffff,DataLen,Data);
@@ -144,7 +144,7 @@ void tN2kMsg::Add3ByteDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add2ByteDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf2ByteDouble(v,precision,DataLen,Data);
   } else {
     SetBuf2ByteUInt(N2kInt16NA,DataLen,Data);
@@ -153,7 +153,7 @@ void tN2kMsg::Add2ByteDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add2ByteUDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf2ByteUDouble(v,precision,DataLen,Data);
   } else {
     SetBuf2ByteUInt(N2kUInt16NA,DataLen,Data);
@@ -162,7 +162,7 @@ void tN2kMsg::Add2ByteUDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add1ByteDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf1ByteDouble(v,precision,DataLen,Data);
   } else {
     AddByte(N2kInt8NA);
@@ -171,7 +171,7 @@ void tN2kMsg::Add1ByteDouble(double v, double precision, double UndefVal) {
 
 //*****************************************************************************
 void tN2kMsg::Add1ByteUDouble(double v, double precision, double UndefVal) {
-  if (v!=UndefVal) {
+  if (fabs(v - UndefVal) >= EPSILON) {
     SetBuf1ByteUDouble(v,precision,DataLen,Data);
   } else {
     AddByte(N2kUInt8NA);
